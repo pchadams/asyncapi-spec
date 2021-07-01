@@ -1,0 +1,118 @@
+asyncapi: '2.0.0'
+id: urn:com:notflix:newMovieService
+info:
+  title: NewMovieService API
+  version: '1.0.0'
+  description: |
+    The Notflix NewMovieService API allows movie producers to publish details of new movie releases
+
+    ### Features:
+      * Submit new movie information to Notflix
+      * Notify Notflix subscribers of a new release
+  termsOfService: https://www.notflix.com/termsofservice
+  contact:
+      name: API Support
+      url: https://notflix.com/APIsupport
+      email: api.support@notflix.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+
+servers:
+  broker1:
+    url: broker:29092
+    protocol: kafka
+    description: cp-all-in-one-demo laptop docker plaintext broker1 connection
+
+defaultContentType: application/json
+
+channels:
+  moviesRegistered:
+    description: The Kafka topic on which new movie information may be produced and consumed.
+    publish:
+      summary: Inform about new Movies
+      operationId: registerMovie
+      traits:
+        - $ref: '#/components/operationTraits/kafka'
+      message:
+        $ref: '#/components/messages/registerMovie'
+
+components:
+  messages:
+    registerMovie:
+      name: registerMovie
+      title: New Movie Registration
+      summary: Inform about a new Movie Release
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/commonHeaders'
+      payload:
+        $ref: "#/components/schemas/registerMoviePayload"
+
+  schemas:
+    registerMoviePayload:
+      description: New Movie Release payload. Schema based on file netflix_titles.csv
+      type: object
+      properties:
+        show_id:
+          type: integer
+          minimum: 0
+          description: Unique Show identifier
+        show_type:
+          type: string
+          description: Movie or TV
+          enum:
+            - Movie
+            - TV Show
+        title:
+            type: string
+        director:
+          type: string
+          description: Director name
+        cast:
+          type: array
+          description: Cast list
+          items:
+            type: string
+        country:
+          type: string
+          description: Country of origin
+        date_added:
+          type: string
+          description: Date show added to Netflix
+        release_year:
+          type: string
+          description: Year show released
+        rating:
+          type: string
+          description: Show rating e.g PG
+        duration:
+          type: string
+          description: Duration of movie, or number of seasons for TV Show
+        listed_in:
+          type: string
+          description: type/genre
+        description:
+          type: string
+          description: Show synopsis
+        sentAt:
+          $ref: "#/components/schemas/sentAt"
+    sentAt:
+      type: string
+      format: date-time
+      description: Date and time when the message was sent.
+  messageTraits:
+    commonHeaders:
+      headers:
+        type: object
+        properties:
+          my-app-header:
+            type: integer
+            minimum: 0
+            maximum: 100
+  
+  operationTraits:
+    kafka:
+      bindings:
+        kafka:
+          clientId: newMovieService
