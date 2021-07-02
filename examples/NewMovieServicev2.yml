@@ -1,0 +1,65 @@
+asyncapi: '2.0.0'
+id: urn:com:notflix:newMovieService
+info:
+  title: NewMovieService API
+  version: '1.0.0'
+  description: |
+    The Notflix NewMovieService API allows movie producers to publish details of new movie releases
+
+    ### Features:
+      * Submit new movie information to Notflix
+      * Notify Notflix subscribers of a new release
+  termsOfService: https://www.notflix.com/termsofservice
+  contact:
+      name: API Support
+      url: https://notflix.com/APIsupport
+      email: api.support@notflix.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+
+servers:
+  broker1:
+    url: broker:29092
+    protocol: kafka
+    description: cp-all-in-one-demo laptop docker plaintext broker1 connection
+
+defaultContentType: application/json
+
+channels:
+  moviesRegistered:
+    description: The Kafka topic on which new movie information may be produced and consumed.
+    publish:
+      summary: Inform about new Movies
+      operationId: registerMovie
+      traits:
+        - $ref: '#/components/operationTraits/kafka'
+      message:
+        $ref: '#/components/messages/registerMovie'
+
+components:
+  messages:
+    registerMovie:
+      name: registerMovie
+      title: New Movie Registration
+      summary: Inform about a new Movie Release
+      contentType: application/json
+      schemaFormat: "application/vnd.apache.avro+json;version=1.9.0"
+      payload:
+        $ref: "http://localhost:8081/schemas/ids/1"
+
+  messageTraits:
+    commonHeaders:
+      headers:
+        type: object
+        properties:
+          my-app-header:
+            type: integer
+            minimum: 0
+            maximum: 100
+  
+  operationTraits:
+    kafka:
+      bindings:
+        kafka:
+          clientId: newMovieService
