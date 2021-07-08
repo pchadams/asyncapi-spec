@@ -33,7 +33,7 @@ channels:
       summary: Inform about new Movies
       operationId: registerMovie
       traits:
-        - $ref: '#/components/operationTraits/kafka'
+        $ref: '#/components/operationTraits/kafka'
       message:
         $ref: '#/components/messages/registerMovie'
 
@@ -45,11 +45,11 @@ components:
       summary: Inform about a new Movie Release
       contentType: application/json
       traits:
-        - $ref: '#/components/messageTraits/commonHeaders'
+        $ref: '#/components/messageTraits/commonHeaders'
       payload:
         $ref: '#/components/schemas/registerMoviePayload'
       example:
-          show_id: 143
+        - show_id: 143
           show_type: Movie
           title: Lost Highway
           director: David Lynch
