@@ -48,6 +48,20 @@ components:
        - $ref: '#/components/messageTraits/commonHeaders'
       payload:
         $ref: '#/components/schemas/registerMoviePayload'
+        example:
+          - show_id: 143
+            show_type: Movie
+            title: Lost Highway
+            director: David Lynch
+            cast: Bill Pullman, Patricia Arquette
+            country: USA
+            date_added: December 2019
+            release_year: 1997
+            rating: R18
+            duration: 135mins
+            listed_in: Arthouse, Psychological Thriller, Noir, Mystery
+            description: Anonymous videotapes presage a musician's murder conviction, and a gangster's girlfriend leads a mechanic astray.
+            sentAt: 08072021115500
   schemas:
     registerMoviePayload:
       description: New Movie Release payload. Schema based on file netflix_titles.csv
